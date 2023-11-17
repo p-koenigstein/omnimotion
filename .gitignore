@@ -1,3 +1,6 @@
 out/
 logs/
 __pycache__/
+/bask-cam/
+/bask-2/
+/tennis/

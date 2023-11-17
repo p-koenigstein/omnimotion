@@ -25,7 +25,7 @@ pip install matplotlib tensorboard scipy opencv-python tqdm tensorboardX configa
 ```
 
 ## Training
-1. Please refer to the [preprocessing instructions](preprocessing/README.md) for preparing input data 
+1. Please refer to the [preprocessing instructions](src/preprocessing/README.md) for preparing input data 
    for training OmniMotion. We also provide some processed [data](https://omnimotion.cs.cornell.edu/dataset/)
    that you can download, unzip and directly train on. (Note that depending on the network speed, 
    it may be faster to run the processing script locally than downloading the processed data).
