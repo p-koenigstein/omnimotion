@@ -30,9 +30,9 @@ import torch.nn.functional as F
 from torchvision import datasets, transforms
 from torchvision import models as torchvision_models
 
-import utils
-import vision_transformer as vits
-from vision_transformer import DINOHead
+import omnimotion.preprocessing.dino.utils as utils
+import omnimotion.preprocessing.dino.vision_transformer as vits
+from omnimotion.preprocessing.dino.vision_transformer import DINOHead
 
 torchvision_archs = sorted(name for name in torchvision_models.__dict__
     if name.islower() and not name.startswith("__")

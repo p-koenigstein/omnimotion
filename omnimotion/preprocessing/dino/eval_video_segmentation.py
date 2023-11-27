@@ -28,8 +28,8 @@ import torch
 from torch.nn import functional as F
 from PIL import Image
 
-import utils
-import vision_transformer as vits
+import omnimotion.preprocessing.dino.utils as utils
+import omnimotion.preprocessing.dino.vision_transformer as vits
 
 
 @torch.no_grad()

@@ -11,9 +11,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 import util
-from criterion import masked_l1_loss, compute_depth_range_loss, lossfun_distortion
-from networks.mfn import GaborNet
-from networks.nvp_simplified import NVPSimplified
+from omnimotion.criterion import masked_l1_loss, compute_depth_range_loss, lossfun_distortion
+from omnimotion.networks.mfn import GaborNet
+from omnimotion.networks.nvp_simplified import NVPSimplified
 from kornia import morphology as morph
 
 

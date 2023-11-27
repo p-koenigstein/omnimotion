@@ -7,10 +7,10 @@ import numpy as np
 import torch
 import torch.utils.data
 import torch.distributed as dist
-from config import config_parser
+from omnimotion.config import config_parser
 from tensorboardX import SummaryWriter
-from loaders.create_training_dataset import get_training_dataset
-from trainer import BaseTrainer
+from omnimotion.loaders.create_training_dataset import get_training_dataset
+from omnimotion.trainer import BaseTrainer
 torch.manual_seed(1234)
 
 

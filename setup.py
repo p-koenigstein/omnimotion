@@ -14,5 +14,6 @@ setuptools.setup(
     version="1.0.0",
     install_requires=[],
     packages=setuptools.find_packages(),
+    package_data={'configs':['default.txt']},
     python_requires=">=3.9",
 )

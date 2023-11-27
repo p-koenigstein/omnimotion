@@ -23,8 +23,8 @@ from tqdm import tqdm
 import cv2
 import torch
 
-import utils
-import vision_transformer as vits
+import omnimotion.preprocessing.dino.utils as utils
+import omnimotion.preprocessing.dino.vision_transformer as vits
 
 
 def extract_feature(model, frame, return_h_w=False):

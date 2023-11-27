@@ -25,8 +25,8 @@ from torchvision import transforms as pth_transforms
 from PIL import Image, ImageFile
 import numpy as np
 
-import utils
-import vision_transformer as vits
+import omnimotion.preprocessing.dino.utils as utils
+import omnimotion.preprocessing.dino.vision_transformer as vits
 from eval_knn import extract_features
 
 

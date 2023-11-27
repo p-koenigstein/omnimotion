@@ -11,7 +11,7 @@ from typing import (
 )
 from operator import itemgetter
 import torch
-from .raft import RAFTExhaustiveDataset
+from omnimotion.loaders.raft import RAFTExhaustiveDataset
 
 T_co = TypeVar('T_co', covariant=True)
 T = TypeVar('T')

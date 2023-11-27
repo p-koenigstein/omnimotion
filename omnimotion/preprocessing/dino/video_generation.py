@@ -27,7 +27,7 @@ import numpy as np
 from PIL import Image
 
 import utils
-import vision_transformer as vits
+import omnimotion.preprocessing.dino.vision_transformer as vits
 
 
 FOURCC = {

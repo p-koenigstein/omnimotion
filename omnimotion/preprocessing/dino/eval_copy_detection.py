@@ -23,7 +23,7 @@ from torchvision import transforms as pth_transforms
 from PIL import Image
 import numpy as np
 
-import utils
+import omnimotion.preprocessing.dino.utils as utils
 import vision_transformer as vits
 
 
