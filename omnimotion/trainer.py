@@ -10,7 +10,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-import util
+import omnimotion.util as util
 from omnimotion.criterion import masked_l1_loss, compute_depth_range_loss, lossfun_distortion
 from omnimotion.networks.mfn import GaborNet
 from omnimotion.networks.nvp_simplified import NVPSimplified
