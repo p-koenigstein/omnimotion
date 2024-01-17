@@ -40,6 +40,9 @@ class RAFTExhaustiveDataset(Dataset):
         self.grid = gen_grid_np(self.h, self.w)
         flow_stats = json.load(open(os.path.join(self.seq_dir, 'flow_stats.json')))
         self.sample_weights = get_sample_weights(flow_stats)
+        if args.sample_only_mask:
+            self.obj_mask_dir = os.path.join(self.seq_dir, 'object_mask')
+
 
     def __len__(self):
         return self.num_imgs * 100000
@@ -87,6 +90,14 @@ class RAFTExhaustiveDataset(Dataset):
         mask_file = flow_file.replace('raft_exhaustive', 'raft_masks').replace('.npy', '.png')
         masks = imageio.imread(mask_file) / 255.
 
+        if self.args.sample_only_mask:
+            object_mask_file = os.path.join(self.obj_mask_dir, "{}.dat".format(img_name1))
+            object_mask = torch.load(object_mask_file)
+            filtered_mask = torch.zeros(object_mask.shape)
+            for label in self.args.sample_object_labels:
+                label_mask = torch.where(object_mask == label,1,0)
+                filtered_mask = filtered_mask | label_mask
+
         coord1 = self.grid
         coord2 = self.grid + flow
 
@@ -113,9 +124,15 @@ class RAFTExhaustiveDataset(Dataset):
             error_map = np.linalg.norm(pred_flow - sup_flow, axis=-1)
             error_map = cv2.GaussianBlur(error_map, (5, 5), 0)
             error_selected = error_map[mask]
+            if self.args.sample_only_mask:
+                error_selected = error_selected & filtered_mask
             prob = error_selected / np.sum(error_selected)
             select_ids_error = np.random.choice(mask.sum(), self.num_pts, replace=(mask.sum() < self.num_pts), p=prob)
-            select_ids_random = np.random.choice(mask.sum(), self.num_pts, replace=(mask.sum() < self.num_pts))
+            if self.args.sample_only_mask:
+                filtered_mask /= filtered_mask.sum()
+                select_ids_random = np.random.choice(mask.sum(), self.num_pts, replace=(mask.sum() < self.num_pts),p=filtered_mask)
+            else:
+                select_ids_random = np.random.choice(mask.sum(), self.num_pts, replace=(mask.sum() < self.num_pts))
             select_ids = np.random.choice(np.concatenate([select_ids_error, select_ids_random]), self.num_pts,
                                           replace=False)
         else:
@@ -123,11 +140,17 @@ class RAFTExhaustiveDataset(Dataset):
                 count_map = imageio.imread(os.path.join(self.seq_dir, 'count_maps', img_name1.replace('.jpg', '.png')))
                 pixel_sample_weight = 1 / np.sqrt(count_map + 1.)
                 pixel_sample_weight = pixel_sample_weight[mask]
+                if self.args.sample_only_mask:
+                    pixel_sample_weight = pixel_sample_weight & filtered_mask
                 pixel_sample_weight /= pixel_sample_weight.sum()
                 select_ids = np.random.choice(mask.sum(), self.num_pts, replace=(mask.sum() < self.num_pts),
                                               p=pixel_sample_weight)
             else:
-                select_ids = np.random.choice(mask.sum(), self.num_pts, replace=(mask.sum() < self.num_pts))
+                if self.args.sample_only_mask:
+                    filtered_mask /= filtered_mask.sum()
+                    select_ids = np.random.choice(mask.sum(), self.num_pts, replace=(mask.sum() < self.num_pts),p=filtered_mask)
+                else:
+                    select_ids = np.random.choice(mask.sum(), self.num_pts, replace=(mask.sum() < self.num_pts))
 
         pair_weight = np.cos((frame_interval - 1.) / max_interval * np.pi / 2)
 
