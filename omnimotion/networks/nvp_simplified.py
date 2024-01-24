@@ -161,7 +161,8 @@ class NVPSimplified(nn.Module):
                                                               use_pe=True,
                                                               pe_dims=[1],
                                                               pe_freq=pe_freq,
-                                                              output_dim=5).to(device)
+                                                              output_dim=5,
+                                                              device=device).to(device)
 
     def _expand_features(self, F, x):
         _, N, K, _ = x.shape

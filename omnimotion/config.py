@@ -84,7 +84,6 @@ def config_parser():
     parser.add_argument('--sample_object_labels', type=int, default=[13,14], help='list of labels used')
 
     args = parser.parse_args()
-    print(args)
     return args
 
 
