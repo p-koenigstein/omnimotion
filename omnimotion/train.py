@@ -35,7 +35,7 @@ def seed_worker(worker_id):
     random.seed(worker_seed)
 
 
-def train(args):
+def train(args, device='cuda:0'):
     seq_name = os.path.basename(args.data_dir.rstrip('/'))
     out_dir = os.path.join(args.save_dir, '{}_{}'.format(args.expname, seq_name))
     os.makedirs(out_dir, exist_ok=True)
@@ -72,7 +72,7 @@ def train(args):
                                               pin_memory=True)
 
     # get trainer
-    trainer = BaseTrainer(args)
+    trainer = BaseTrainer(args, device=device)
 
     start_step = trainer.step + 1
     step = start_step
@@ -102,7 +102,7 @@ if __name__ == '__main__':
         torch.distributed.init_process_group(backend="nccl", init_method="env://")
         synchronize()
     elif not args.local_rank == 0:
-        torch.cuda.set_device(f"cuda:{args.local_rank}")
-
-    train(args)
+        train(args,device=f"cuda:{args.local_rank}")
+    else:
+        train(args)
 
