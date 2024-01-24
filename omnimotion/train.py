@@ -101,8 +101,8 @@ if __name__ == '__main__':
         torch.cuda.set_device(args.local_rank)
         torch.distributed.init_process_group(backend="nccl", init_method="env://")
         synchronize()
-    if not args.device == 'cuda:0':
-        torch.cuda.set_device(args.device)
+    elif not args.local_rank == 0:
+        torch.cuda.set_device(f"cuda:{args.local_rank}")
 
     train(args)
 
