@@ -7,3 +7,5 @@ __pycache__/
 /omnimotion.egg-info/
 .idea
 build
+/data/
+omnimotion/preprocessing/RAFT/models.zip.1

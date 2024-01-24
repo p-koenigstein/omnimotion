@@ -80,7 +80,7 @@ class BaseTrainer():
                                         load_opt=self.args.load_opt,
                                         load_scheduler=self.args.load_scheduler)
         self.time_steps = torch.linspace(1, self.num_imgs, self.num_imgs, device=self.device)[:, None] / self.num_imgs
-
+        pdb.set_trace()
         if args.distributed:
             self.feature_mlp = torch.nn.parallel.DistributedDataParallel(
                 self.feature_mlp,
