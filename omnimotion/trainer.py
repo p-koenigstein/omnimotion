@@ -491,6 +491,9 @@ class BaseTrainer():
                w_canonical_unit_sphere * canonical_unit_sphere_loss + \
                w_flow_grad * optical_flow_grad_loss
 
+        if torch.isnan(loss):
+            pdb.set_trace()
+
         if write_logs:
             self.scalars_to_log['{}/Loss'.format(log_prefix)] = loss.item()
             self.scalars_to_log['{}/loss_flow'.format(log_prefix)] = optical_flow_loss.item()

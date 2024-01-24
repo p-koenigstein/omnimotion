@@ -9,6 +9,7 @@ def config_parser():
     parser.add_argument('--data_dir', type=str, help='the directory for the video sequence')
     parser.add_argument('--expname', type=str, default='', help='experiment name')
     parser.add_argument('--local_rank', type=int, default=0, help='rank for distributed training')
+    parser.add_argument('--device', type=str, default='cuda:0', help='device used for training')
     parser.add_argument('--save_dir', type=str, default='out/', help='output dir')
     parser.add_argument('--ckpt_path', type=str, default='', help='checkpoint path')
     parser.add_argument('--no_reload', action='store_true', help='do not reload the weights')
@@ -78,6 +79,9 @@ def config_parser():
     parser.add_argument('--i_cache', type=int, default=20000, help='frequency for caching current flow predictions')
 
     parser.add_argument("-f", "--fff", help="a dummy argument to fool ipython", default="1")
+
+    parser.add_argument('--sample_only_mask', action='store_true', help='sample only pixels of the objects mask')
+    parser.add_argument('--sample_object_labels', type=int, default=[13,14], help='list of labels used')
 
     args = parser.parse_args()
     print(args)
