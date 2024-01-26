@@ -75,7 +75,7 @@ class BaseTrainer():
                                                          step_size=args.lrate_decay_steps,
                                                          gamma=args.lrate_decay_factor)
         seq_name = os.path.basename(args.data_dir.rstrip('/'))
-        self.out_dir = os.path.join(args.save_dir, '{}_{}'.format(args.expname, seq_name))
+        self.out_dir = os.path.join(args.save_dir,seq_name)
         self.step = self.load_from_ckpt(self.out_dir,
                                         load_opt=self.args.load_opt,
                                         load_scheduler=self.args.load_scheduler)

@@ -37,7 +37,7 @@ def seed_worker(worker_id):
 
 def train(args, device='cuda:0'):
     seq_name = os.path.basename(args.data_dir.rstrip('/'))
-    out_dir = os.path.join(args.save_dir, '{}_{}'.format(args.expname, seq_name))
+    out_dir = os.path.join(args.save_dir,seq_name)
     os.makedirs(out_dir, exist_ok=True)
     print('optimizing for {}...\n output is saved in {}'.format(seq_name, out_dir))
 
