@@ -547,7 +547,8 @@ class BaseTrainer():
                                                   return_data=True)
 
         if torch.isnan(loss):
-            pdb.set_trace()
+            # pdb.set_trace()
+            return
 
         loss.backward()
 
@@ -588,7 +589,7 @@ class BaseTrainer():
         if use_mask:
             if reverse_mask:
                 mask = ~mask
-            kernel = torch.ones(7, 7, device=self.device)
+            kernel = torch.ones(3, 3, device=self.device)
             mask = morph.erosion(mask.float()[None, None], kernel).bool().squeeze()  # Erosion
         else:
             mask = torch.ones_like(self.grid[..., 0], dtype=torch.bool)

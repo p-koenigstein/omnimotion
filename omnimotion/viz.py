@@ -85,10 +85,15 @@ if __name__ == '__main__':
     radius = 3  # the point radius for point correspondence visualization
 
     mask = None
+    # if os.path.exists(args.foreground_mask_path):
+    #     h, w = trainer.h, trainer.w
+    #     mask = imageio.imread(args.foreground_mask_path)[..., -1]  # rgba image, take the alpha channel
+    #     mask = cv2.resize(mask, dsize=(w, h)) == 255
     if os.path.exists(args.foreground_mask_path):
-        h, w = trainer.h, trainer.w
-        mask = imageio.imread(args.foreground_mask_path)[..., -1]  # rgba image, take the alpha channel
-        mask = cv2.resize(mask, dsize=(w, h)) == 255
+        labels = [13,14]
+        mask_file = torch.load(f"{args.foreground_mask_path}/{args.query_frame_id}.dat")
+        mask = torch.where((mask_file==labels[0])|(mask_file==labels[1]) , 1, 0)
+        mask = mask.numpy()
 
     # for DAVIS video sequences which come with segmentation masks
     # or when a foreground mask for the query frame is provided
@@ -100,7 +105,8 @@ if __name__ == '__main__':
                                                                     occlusion_th=args.occlusion_th,
                                                                     use_max_loc=args.use_max_loc,
                                                                     radius=radius,
-                                                                    return_kpts=True)
+                                                                    return_kpts=True,
+                                                                    interval = 2)
         imageio.mimwrite(os.path.join(vis_dir, '{}_{:06d}_foreground_{}.mp4'.format(seq_name, trainer.step, query_id)),
                          frames, quality=8, fps=10)
         kpts_forground = kpts_forground.cpu().numpy()
