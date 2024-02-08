@@ -946,54 +946,54 @@ class BaseTrainer():
                 print('Saving checkpoints at {} to {}...'.format(step, self.out_dir))
                 fpath = os.path.join(self.out_dir, 'model_{:06d}.pth'.format(step))
                 self.save_model(fpath)
+                if False:
+                    vis_dir = os.path.join(self.out_dir, 'vis')
+                    os.makedirs(vis_dir, exist_ok=True)
+                    print('saving visualizations to {}...'.format(vis_dir))
+                    if self.with_mask:
+                        video_correspondences = self.eval_video_correspondences(0,
+                                                                                use_mask=True,
+                                                                                vis_occlusion=self.args.vis_occlusion,
+                                                                                use_max_loc=self.args.use_max_loc,
+                                                                                occlusion_th=self.args.occlusion_th)
+                        imageio.mimwrite(os.path.join(vis_dir, '{}_corr_foreground_{:06d}.mp4'.format(self.seq_name, step)),
+                                         video_correspondences,
+                                         quality=8, fps=10)
+                        video_correspondences = self.eval_video_correspondences(0,
+                                                                                use_mask=True,
+                                                                                reverse_mask=True,
+                                                                                vis_occlusion=self.args.vis_occlusion,
+                                                                                use_max_loc=self.args.use_max_loc,
+                                                                                occlusion_th=self.args.occlusion_th)
+                        imageio.mimwrite(os.path.join(vis_dir, '{}_corr_background_{:06d}.mp4'.format(self.seq_name, step)),
+                                         video_correspondences,
+                                         quality=8, fps=10)
+                    else:
+                        video_correspondences = self.eval_video_correspondences(0,
+                                                                                vis_occlusion=self.args.vis_occlusion,
+                                                                                use_max_loc=self.args.use_max_loc,
+                                                                                occlusion_th=self.args.occlusion_th)
+                        imageio.mimwrite(os.path.join(vis_dir, '{}_corr_{:06d}.mp4'.format(self.seq_name, step)),
+                                         video_correspondences,
+                                         quality=8, fps=10)
+                    color_frames, depth_frames = self.render_color_and_depth_videos(0, self.num_imgs,
+                                                                                    chunk_size=self.args.chunk_size)
+                    imageio.mimwrite(os.path.join(vis_dir, '{}_depth_{:06d}.mp4'.format(self.seq_name, step)), depth_frames,
+                                     quality=8, fps=10)
+                    imageio.mimwrite(os.path.join(vis_dir, '{}_color_{:06d}.mp4'.format(self.seq_name, step)), color_frames,
+                                     quality=8, fps=10)
 
-                vis_dir = os.path.join(self.out_dir, 'vis')
-                os.makedirs(vis_dir, exist_ok=True)
-                print('saving visualizations to {}...'.format(vis_dir))
-                if self.with_mask:
-                    video_correspondences = self.eval_video_correspondences(0,
-                                                                            use_mask=True,
-                                                                            vis_occlusion=self.args.vis_occlusion,
-                                                                            use_max_loc=self.args.use_max_loc,
-                                                                            occlusion_th=self.args.occlusion_th)
-                    imageio.mimwrite(os.path.join(vis_dir, '{}_corr_foreground_{:06d}.mp4'.format(self.seq_name, step)),
-                                     video_correspondences,
+                    ids1 = np.arange(self.num_imgs)
+                    ids2 = ids1 + 1
+                    ids2[-1] -= 2
+                    pred_optical_flows_vis, pred_optical_flows = self.get_pred_flows(ids1, ids2,
+                                                                                     use_max_loc=self.args.use_max_loc,
+                                                                                     chunk_size=self.args.chunk_size,
+                                                                                     return_original=True
+                                                                                     )
+                    imageio.mimwrite(os.path.join(vis_dir, '{}_flow_{:06d}.mp4'.format(self.seq_name, step)),
+                                     pred_optical_flows_vis[:-1],
                                      quality=8, fps=10)
-                    video_correspondences = self.eval_video_correspondences(0,
-                                                                            use_mask=True,
-                                                                            reverse_mask=True,
-                                                                            vis_occlusion=self.args.vis_occlusion,
-                                                                            use_max_loc=self.args.use_max_loc,
-                                                                            occlusion_th=self.args.occlusion_th)
-                    imageio.mimwrite(os.path.join(vis_dir, '{}_corr_background_{:06d}.mp4'.format(self.seq_name, step)),
-                                     video_correspondences,
-                                     quality=8, fps=10)
-                else:
-                    video_correspondences = self.eval_video_correspondences(0,
-                                                                            vis_occlusion=self.args.vis_occlusion,
-                                                                            use_max_loc=self.args.use_max_loc,
-                                                                            occlusion_th=self.args.occlusion_th)
-                    imageio.mimwrite(os.path.join(vis_dir, '{}_corr_{:06d}.mp4'.format(self.seq_name, step)),
-                                     video_correspondences,
-                                     quality=8, fps=10)
-                color_frames, depth_frames = self.render_color_and_depth_videos(0, self.num_imgs,
-                                                                                chunk_size=self.args.chunk_size)
-                imageio.mimwrite(os.path.join(vis_dir, '{}_depth_{:06d}.mp4'.format(self.seq_name, step)), depth_frames,
-                                 quality=8, fps=10)
-                imageio.mimwrite(os.path.join(vis_dir, '{}_color_{:06d}.mp4'.format(self.seq_name, step)), color_frames,
-                                 quality=8, fps=10)
-
-                ids1 = np.arange(self.num_imgs)
-                ids2 = ids1 + 1
-                ids2[-1] -= 2
-                pred_optical_flows_vis, pred_optical_flows = self.get_pred_flows(ids1, ids2,
-                                                                                 use_max_loc=self.args.use_max_loc,
-                                                                                 chunk_size=self.args.chunk_size,
-                                                                                 return_original=True
-                                                                                 )
-                imageio.mimwrite(os.path.join(vis_dir, '{}_flow_{:06d}.mp4'.format(self.seq_name, step)),
-                                 pred_optical_flows_vis[:-1],
-                                 quality=8, fps=10)
 
             if self.args.use_error_map and (step % self.args.i_cache == 0) and (step > 0):
                 flow_save_dir = os.path.join(self.out_dir, 'flow')
