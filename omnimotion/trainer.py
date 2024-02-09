@@ -547,8 +547,7 @@ class BaseTrainer():
                                                   return_data=True)
 
         if torch.isnan(loss):
-            # pdb.set_trace()
-            return
+            pdb.set_trace()
 
         loss.backward()
 
