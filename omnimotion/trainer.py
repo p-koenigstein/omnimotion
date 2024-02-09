@@ -995,23 +995,23 @@ class BaseTrainer():
                                      pred_optical_flows_vis[:-1],
                                      quality=8, fps=10)
 
-            if self.args.use_error_map and (step % self.args.i_cache == 0) and (step > 0):
-                flow_save_dir = os.path.join(self.out_dir, 'flow')
-                os.makedirs(flow_save_dir, exist_ok=True)
-                flow_errors = []
-                for i, (id1, id2) in enumerate(zip(ids1, ids2)):
-                    save_path = os.path.join(flow_save_dir, '{}_{}.npy'.format(os.path.basename(self.img_files[id1]),
-                                                                               os.path.basename(self.img_files[id2])))
-                    np.save(save_path, pred_optical_flows[i])
-                    gt_flow = np.load(os.path.join(self.seq_dir, 'raft_exhaustive',
-                                                   '{}_{}.npy'.format(os.path.basename(self.img_files[id1]),
-                                                                      os.path.basename(self.img_files[id2]))
-                                                   ))
-                    flow_error = np.linalg.norm(gt_flow - pred_optical_flows[i], axis=-1).mean()
-                    flow_errors.append(flow_error)
+                    if self.args.use_error_map and (step % self.args.i_cache == 0) and (step > 0):
+                        flow_save_dir = os.path.join(self.out_dir, 'flow')
+                        os.makedirs(flow_save_dir, exist_ok=True)
+                        flow_errors = []
+                        for i, (id1, id2) in enumerate(zip(ids1, ids2)):
+                            save_path = os.path.join(flow_save_dir, '{}_{}.npy'.format(os.path.basename(self.img_files[id1]),
+                                                                                       os.path.basename(self.img_files[id2])))
+                            np.save(save_path, pred_optical_flows[i])
+                            gt_flow = np.load(os.path.join(self.seq_dir, 'raft_exhaustive',
+                                                           '{}_{}.npy'.format(os.path.basename(self.img_files[id1]),
+                                                                              os.path.basename(self.img_files[id2]))
+                                                           ))
+                            flow_error = np.linalg.norm(gt_flow - pred_optical_flows[i], axis=-1).mean()
+                            flow_errors.append(flow_error)
 
-                flow_errors = np.array(flow_errors)
-                np.savetxt(os.path.join(self.out_dir, 'flow_error.txt'), flow_errors)
+                        flow_errors = np.array(flow_errors)
+                        np.savetxt(os.path.join(self.out_dir, 'flow_error.txt'), flow_errors)
 
     def save_model(self, filename):
         to_save = {'optimizer': self.optimizer.state_dict(),
