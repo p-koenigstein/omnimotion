@@ -77,7 +77,7 @@ def train(args, device='cuda:0'):
     start_step = trainer.step + 1
     step = start_step
     epoch = 0
-    while step < args.num_iters + start_step + 1:
+    while step < args.num_iters + 1:
         for batch in data_loader:
             trainer.train_one_step(step, batch)
             trainer.log(writer, step)
@@ -86,7 +86,7 @@ def train(args, device='cuda:0'):
 
             dataset.set_max_interval(args.start_interval + step // 2000)
 
-            if step >= args.num_iters + start_step + 1:
+            if step >= args.num_iters + 1:
                 break
 
         epoch += 1

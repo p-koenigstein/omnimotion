@@ -75,7 +75,7 @@ def config_parser():
     # log
     parser.add_argument('--i_print', type=int, default=100, help='frequency for printing losses')
     parser.add_argument('--i_img', type=int, default=500, help='frequency for writing visualizations to tensorboard')
-    parser.add_argument('--i_weight', type=int, default=20000, help='frequency for saving ckpts')
+    parser.add_argument('--i_weight', type=int, default=5000, help='frequency for saving ckpts')
     parser.add_argument('--i_cache', type=int, default=20000, help='frequency for caching current flow predictions')
 
     parser.add_argument("-f", "--fff", help="a dummy argument to fool ipython", default="1")
